@@ -10,8 +10,14 @@ import UIKit
 class ViewController: UIViewController {
     
     let addPhotoButton: UIButton = {
+        let image = UIImage(named: "PlusPhoto")
+        if image == nil {
+            print("Image not found")
+        }
+        
         let button = UIButton()
-        button.backgroundColor = .red
+        button.setImage(UIImage(named: "PlusPhoto"), for: .normal)
+        
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
