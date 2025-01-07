@@ -10,9 +10,7 @@ import UIKit
 class ViewController: UIViewController {
     
     let addPhotoButton: UIButton = {
-        
-        
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setImage(UIImage(named: "PlusPhoto"), for: .normal)
         
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -30,6 +28,42 @@ class ViewController: UIViewController {
         
         return emailTextField
     }()
+    
+    let passwordTextField: UITextField = {
+        let passwordTextField = UITextField()
+        passwordTextField.placeholder = "Password"
+        passwordTextField.textColor = .black
+        passwordTextField.backgroundColor = UIColor(white: 0, alpha: 0.03)
+        passwordTextField.borderStyle = .roundedRect
+        passwordTextField.font = UIFont.systemFont(ofSize: 15)
+        passwordTextField.isSecureTextEntry = true
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        
+        return passwordTextField
+    }()
+    
+    let userNameTextField: UITextField = {
+        let userNameTextField = UITextField()
+        userNameTextField.placeholder = "Username"
+        userNameTextField.textColor = .black
+        userNameTextField.backgroundColor = UIColor(white: 0, alpha: 0.03)
+        userNameTextField.borderStyle = .roundedRect
+        userNameTextField.font = UIFont.systemFont(ofSize: 15)
+        userNameTextField.translatesAutoresizingMaskIntoConstraints = false
+        
+        return userNameTextField
+    }()
+    
+    let signUpButton: UIButton = {
+        let signUpButton = UIButton(type: .system)
+        signUpButton.setTitle("Sign Up", for: .normal)
+        signUpButton.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
+        signUpButton.setTitleColor(.white, for: .normal)
+        signUpButton.layer.cornerRadius = 10
+        signUpButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        signUpButton.translatesAutoresizingMaskIntoConstraints = false
+        return signUpButton
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,32 +73,28 @@ class ViewController: UIViewController {
         addPhotoButton.widthAnchor.constraint(equalToConstant: 140).isActive = true
         addPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         addPhotoButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 60).isActive = true
-        //end last comment
-        
-        //view.addSubview(emailTextField)
         setUpInputFields()
+        
+//        view.addSubview(signUpButton)
+        
 
     }
     
     private func setUpInputFields(){
-        let greenView = UIView()
-        greenView.backgroundColor = .green
         
-        let redView = UIView()
-        redView.backgroundColor = .red
-        
-        let stackView = UIStackView(arrangedSubviews: [greenView, redView])
+        let stackView = UIStackView(arrangedSubviews: [emailTextField, userNameTextField , passwordTextField, signUpButton])
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         stackView.distribution = .fillEqually
         stackView.axis = .vertical
+        stackView.spacing = 7
         
         view.addSubview(stackView)
         stackView.topAnchor.constraint(equalTo: addPhotoButton.bottomAnchor, constant: 40).isActive = true
         stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 60).isActive = true
         stackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -60).isActive = true
-        stackView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        stackView.heightAnchor.constraint(equalToConstant: 190).isActive = true
     }
         
 
