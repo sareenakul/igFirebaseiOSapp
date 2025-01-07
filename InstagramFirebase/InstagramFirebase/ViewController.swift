@@ -22,7 +22,10 @@ class ViewController: UIViewController {
     let emailTextField: UITextField = {
         let emailTextField = UITextField()
         emailTextField.placeholder = "Email"
-        emailTextField.textColor = .lightGray
+        emailTextField.textColor = .black
+        emailTextField.backgroundColor = UIColor(white: 0, alpha: 0.03)
+        emailTextField.borderStyle = .roundedRect
+        emailTextField.font = UIFont.systemFont(ofSize: 15)
         emailTextField.translatesAutoresizingMaskIntoConstraints = false
         
         return emailTextField
@@ -35,15 +38,35 @@ class ViewController: UIViewController {
         addPhotoButton.heightAnchor.constraint(equalToConstant: 140).isActive = true
         addPhotoButton.widthAnchor.constraint(equalToConstant: 140).isActive = true
         addPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        addPhotoButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
+        addPhotoButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 60).isActive = true
         //end last comment
         
-        view.addSubview(emailTextField)
-        emailTextField.topAnchor.constraint(equalTo: addPhotoButton.bottomAnchor, constant: 40).isActive = true
-        emailTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 60).isActive = true
-        emailTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 60).isActive = true
-        emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        //view.addSubview(emailTextField)
+        setUpInputFields()
+
     }
+    
+    private func setUpInputFields(){
+        let greenView = UIView()
+        greenView.backgroundColor = .green
+        
+        let redView = UIView()
+        redView.backgroundColor = .red
+        
+        let stackView = UIStackView(arrangedSubviews: [greenView, redView])
+        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        stackView.distribution = .fillEqually
+        stackView.axis = .vertical
+        
+        view.addSubview(stackView)
+        stackView.topAnchor.constraint(equalTo: addPhotoButton.bottomAnchor, constant: 40).isActive = true
+        stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 60).isActive = true
+        stackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -60).isActive = true
+        stackView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+        
 
 
 }
