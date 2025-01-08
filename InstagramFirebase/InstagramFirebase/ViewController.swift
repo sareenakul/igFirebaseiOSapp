@@ -91,13 +91,29 @@ class ViewController: UIViewController {
         stackView.spacing = 7
         
         view.addSubview(stackView)
-        stackView.topAnchor.constraint(equalTo: addPhotoButton.bottomAnchor, constant: 40).isActive = true
-        stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 60).isActive = true
-        stackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -60).isActive = true
-        stackView.heightAnchor.constraint(equalToConstant: 190).isActive = true
-    }
         
+        
+        
+        stackView.anchor(top: addPhotoButton.bottomAnchor, bottom: nil, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingBottom: 0, paddingLeft: 40, paddingRight: -40)
+    }
+}
 
-
+extension UIView{
+    func anchor(top: NSLayoutYAxisAnchor?, bottom: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, right: NSLayoutXAxisAnchor?, paddingTop: CGFloat, paddingBottom: CGFloat, paddingLeft: CGFloat, paddingRight: CGFloat){
+        
+        
+            if let top = top{
+                self.topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true
+            }
+            if let bottom = bottom{
+                self.bottomAnchor.constraint(equalTo: bottom, constant: paddingBottom).isActive = true
+            }
+            if let left = left{
+                self.leftAnchor.constraint(equalTo: left, constant: paddingLeft).isActive = true
+            }
+            if let right = right{
+                self.rightAnchor.constraint(equalTo: right, constant: paddingRight).isActive = true
+            }
+    }
 }
 
