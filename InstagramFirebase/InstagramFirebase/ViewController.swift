@@ -6,6 +6,11 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+
+
+
 
 class ViewController: UIViewController {
     
@@ -62,21 +67,39 @@ class ViewController: UIViewController {
         signUpButton.layer.cornerRadius = 10
         signUpButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         signUpButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        signUpButton.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
+        
         return signUpButton
     }()
+    
+    @objc func handleSignUp(){
+        let email = "sareen.akul@gmail.com"
+        let password = "123456789"
+        Auth.auth().createUser(withEmail: email, password: password){ authResult, error in
+            if let error = error{
+                print("Failed to create the user: \(error)")
+                return
+            }
+            guard let user = authResult?.user else{
+                return
+            }
+            print("Successful user creation: \(user.uid)")
+        }
+        
+    }
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Adds auto-layout to the element
         view.addSubview(addPhotoButton)
-        addPhotoButton.heightAnchor.constraint(equalToConstant: 140).isActive = true
-        addPhotoButton.widthAnchor.constraint(equalToConstant: 140).isActive = true
+        
         addPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        addPhotoButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 60).isActive = true
+        
+        addPhotoButton.anchor(top: view.topAnchor, bottom: nil, left: nil, right: nil, paddingTop: 60, paddingBottom: 0, paddingLeft: 0, paddingRight: 0, width: 140, height: 140)
         setUpInputFields()
-        
-//        view.addSubview(signUpButton)
-        
 
     }
     
