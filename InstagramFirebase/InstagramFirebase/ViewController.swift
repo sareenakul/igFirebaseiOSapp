@@ -30,9 +30,22 @@ class ViewController: UIViewController {
         emailTextField.borderStyle = .roundedRect
         emailTextField.font = UIFont.systemFont(ofSize: 15)
         emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        emailTextField.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         
         return emailTextField
     }()
+    
+    @objc func handleTextInputChange() {
+        let isFormValid = emailTextField.text?.count ?? 0 > 0 && userNameTextField.text?.count ?? 0 > 0 && passwordTextField.text?.count ?? 0 > 0
+        if isFormValid{
+            signUpButton.isEnabled = true
+            signUpButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+        } else{
+            signUpButton.isEnabled = false
+            signUpButton.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+        }
+//
+    }
     
     let passwordTextField: UITextField = {
         let passwordTextField = UITextField()
@@ -43,6 +56,7 @@ class ViewController: UIViewController {
         passwordTextField.font = UIFont.systemFont(ofSize: 15)
         passwordTextField.isSecureTextEntry = true
         passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        passwordTextField.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         
         return passwordTextField
     }()
@@ -55,6 +69,7 @@ class ViewController: UIViewController {
         userNameTextField.borderStyle = .roundedRect
         userNameTextField.font = UIFont.systemFont(ofSize: 15)
         userNameTextField.translatesAutoresizingMaskIntoConstraints = false
+        userNameTextField.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         
         return userNameTextField
     }()
@@ -69,6 +84,8 @@ class ViewController: UIViewController {
         signUpButton.translatesAutoresizingMaskIntoConstraints = false
         
         signUpButton.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
+        
+        signUpButton.isEnabled = false
         
         return signUpButton
     }()
