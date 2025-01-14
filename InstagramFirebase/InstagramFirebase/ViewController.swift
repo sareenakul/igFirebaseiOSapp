@@ -74,8 +74,20 @@ class ViewController: UIViewController {
     }()
     
     @objc func handleSignUp(){
-        let email = "sareen.akul@gmail.com"
-        let password = "123456789"
+        
+        guard let email = emailTextField.text, !email.isEmpty else{
+            return
+        }
+        
+        guard let username = userNameTextField.text, !username.isEmpty else{
+            return
+        }
+        
+        guard let password = passwordTextField.text, !password.isEmpty else{
+            return
+        }
+        
+        
         Auth.auth().createUser(withEmail: email, password: password){ authResult, error in
             if let error = error{
                 print("Failed to create the user: \(error)")
