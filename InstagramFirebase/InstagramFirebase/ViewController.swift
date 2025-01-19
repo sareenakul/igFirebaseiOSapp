@@ -8,6 +8,7 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import FirebaseDatabase
 
 
 
@@ -90,35 +91,65 @@ class ViewController: UIViewController {
         return signUpButton
     }()
     
-    @objc func handleSignUp(){
+    var isSubmitting = false
+    
+    @objc func handleSignUp() {
+        guard !isSubmitting else {  // Prevent submitting if the process is already ongoing
+               return
+           }
         
-        guard let email = emailTextField.text, !email.isEmpty else{
+        isSubmitting = true
+        
+        guard let email = emailTextField.text, !email.isEmpty else {
+            print("Email is empty")
+            isSubmitting = false
             return
         }
         
-        guard let username = userNameTextField.text, !username.isEmpty else{
+        guard let username = userNameTextField.text, !username.isEmpty else {
+            print("Username is empty")
+            isSubmitting = false
             return
         }
         
-        guard let password = passwordTextField.text, !password.isEmpty else{
+        guard let password = passwordTextField.text, !password.isEmpty else {
+            print("Password is empty")
+            isSubmitting = false
             return
         }
         
-        
-        Auth.auth().createUser(withEmail: email, password: password){ authResult, error in
-            if let error = error{
-                print("Failed to create the user: \(error)")
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            if let error = error as NSError? {
+                // Handle email already in use error
+                if error.code == AuthErrorCode.emailAlreadyInUse.rawValue {
+                    print("The email address is already in use by another account.")
+                } else {
+                    print("Failed to create the user: \(error.localizedDescription)")
+                }
+                self.isSubmitting = false
                 return
             }
-            guard let user = authResult?.user else{
+            
+            guard let user = authResult?.user else {
+                print("User creation successful but no user object returned")
+                self.isSubmitting = false
                 return
             }
-            print("Successful user creation: \(user.uid)")
+            
+            let uid = user.uid
+            let values = ["username": username, "email": email]
+            Database.database().reference().child("users").child(uid).setValue(values) { error, ref in
+                if let error = error {
+                    print("Failed to save user info to the database: \(error.localizedDescription)")
+                    self.isSubmitting = false
+                    return
+                }
+                print("Successfully saved user info to the database with UID: \(uid)")
+                self.isSubmitting = false
+            }
         }
-        
     }
-    
-    
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
