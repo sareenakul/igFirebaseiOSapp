@@ -138,15 +138,16 @@ class ViewController: UIViewController {
             
             let uid = user.uid
             let values = ["username": username, "email": email]
-            Database.database().reference().child("users").child(uid).setValue(values) { error, ref in
-                if let error = error {
-                    print("Failed to save user info to the database: \(error.localizedDescription)")
+            //let values = [uid: usernameValues]
+            Database.database().reference().child("users").child(uid).updateChildValues(values, withCompletionBlock: {(error, ref) in
+                if let error = error{
+                    print("Failed to save user info to Database: \(error.localizedDescription)")
                     self.isSubmitting = false
                     return
                 }
-                print("Successfully saved user info to the database with UID: \(uid)")
+                print("Successfully added the user info to the firebase database with uid: \(uid)")
                 self.isSubmitting = false
-            }
+            })
         }
     }
 
