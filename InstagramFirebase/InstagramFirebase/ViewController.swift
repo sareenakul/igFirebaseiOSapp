@@ -13,15 +13,45 @@ import FirebaseDatabase
 
 
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let addPhotoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "PlusPhoto"), for: .normal)
         
+        button.addTarget(self, action: #selector(handleAddPhoto), for: .touchUpInside)
+        
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    @objc func handleAddPhoto(){
+        let uiImagePickerController = UIImagePickerController()
+        
+        uiImagePickerController.delegate = self
+        uiImagePickerController.allowsEditing = true
+        present(uiImagePickerController, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage{
+            
+            addPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
+            
+        } else if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage{
+            addPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
+            
+        }
+            
+        addPhotoButton.layer.cornerRadius = addPhotoButton.frame.width/2
+        addPhotoButton.layer.masksToBounds = true
+            
+            dismiss(animated: true, completion: nil)
+        
+        
+        
+    }
     
     let emailTextField: UITextField = {
         let emailTextField = UITextField()
