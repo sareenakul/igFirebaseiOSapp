@@ -9,6 +9,7 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
+import FirebaseStorage
 
 
 
@@ -46,6 +47,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
         addPhotoButton.layer.cornerRadius = addPhotoButton.frame.width/2
         addPhotoButton.layer.masksToBounds = true
+        addPhotoButton.layer.borderColor = UIColor.black.cgColor
+        addPhotoButton.layer.borderWidth = 3
             
             dismiss(animated: true, completion: nil)
         
@@ -148,7 +151,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             return
         }
         
-        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+        Auth.auth().createUser(withEmail: email, password: password, completion: { authResult, error in
             if let error = error as NSError? {
                 // Handle email already in use error
                 if error.code == AuthErrorCode.emailAlreadyInUse.rawValue {
@@ -166,20 +169,59 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 return
             }
             
-            let uid = user.uid
-            let values = ["username": username, "email": email]
-            //let values = [uid: usernameValues]
-            Database.database().reference().child("users").child(uid).updateChildValues(values, withCompletionBlock: {(error, ref) in
+            guard let image = self.addPhotoButton.imageView?.image else{
+                print("No image selected")
+                return
+            }
+            
+            guard let uploadData = image.jpegData(compressionQuality: 0.3) else {
+                print("Failed to compress image")
+                return
+            }
+            
+            let filename = UUID().uuidString
+            let storageRef = Storage.storage().reference().child("profile_images/\(filename).jpg")
+            
+            storageRef.putData(uploadData, metadata: nil) { (metadata, error) in
                 if let error = error{
-                    print("Failed to save user info to Database: \(error.localizedDescription)")
+                    print("Failed to upload profile image: \(error.localizedDescription)")
                     self.isSubmitting = false
                     return
                 }
-                print("Successfully added the user info to the firebase database with uid: \(uid)")
-                self.isSubmitting = false
-            })
+                
+                print("Image successfully uploaded with metadata: \(String(describing: metadata))")
+                
+                storageRef.downloadURL{ (url, error) in
+                    guard let profileImageURL = url?.absoluteString else {
+                        print("Failed to get the URL:",  error?.localizedDescription ?? "Unknown error")
+                        return
+                    }
+                    
+                    print("Successfully added image to Storage: ", profileImageURL)
+                    
+                    let uid = user.uid
+                    let values = ["username": username, "email": email, "profileImageURL": profileImageURL]
+                    //let values = [uid: usernameValues]
+                    Database.database().reference().child("users").child(uid).updateChildValues(values, withCompletionBlock: {(error, ref) in
+                        if let error = error{
+                            print("Failed to save user info to Database: \(error.localizedDescription)")
+                            self.isSubmitting = false
+                            return
+                        }
+                        print("Successfully added the user info to the firebase database with uid: \(uid)")
+                        self.isSubmitting = false
+                    })
+                }
+                
+                
+                
+            }
+            
+            
+
+            
         }
-    }
+    )}
 
 
     override func viewDidLoad() {
