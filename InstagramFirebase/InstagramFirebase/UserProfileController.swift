@@ -10,6 +10,7 @@ class UserProfileController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //tabBarController?.tabBar.isHidden = false
         
         collectionView.backgroundColor = .green
         
